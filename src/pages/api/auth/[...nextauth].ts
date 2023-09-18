@@ -1,6 +1,7 @@
 import NextAuth, { DefaultSession, type NextAuthOptions } from 'next-auth'
 import GoogleProvider from 'next-auth/providers/google'
 import DiscordProvider from 'next-auth/providers/discord'
+import Auth0Provider from "next-auth/providers/auth0"
 import { env } from '@/env.mjs'
 import { Provider } from 'next-auth/providers'
 import { DefaultJWT } from 'next-auth/jwt'
@@ -27,6 +28,16 @@ function getProviders(): Provider[] {
       DiscordProvider({
         clientId: env.DISCORD_CLIENT_ID,
         clientSecret: env.DISCORD_CLIENT_SECRET,
+      })
+    )
+  }
+
+  if (env.AUTH0_CLIENT_ID && env.AUTH0_CLIENT_SECRET && env.AUTH0_ISSUER) {
+    providers.push(
+      Auth0Provider({
+        clientId: env.AUTH0_CLIENT_ID,
+        clientSecret: env.AUTH0_CLIENT_SECRET,
+        issuer: env.AUTH0_ISSUER
       })
     )
   }

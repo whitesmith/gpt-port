@@ -52,6 +52,10 @@ const server = z.object({
 
   DISCORD_CLIENT_ID: z.string().min(1).optional(),
   DISCORD_CLIENT_SECRET: z.string().min(1).optional(),
+
+  AUTH0_CLIENT_ID: z.string().min(1).optional(),
+  AUTH0_CLIENT_SECRET: z.string().min(1).optional(),
+  AUTH0_ISSUER: z.string().min(1).optional(),
 })
 
 const client = z.object({
@@ -79,6 +83,10 @@ const processEnv = {
 
   DISCORD_CLIENT_ID: process.env.DISCORD_CLIENT_ID,
   DISCORD_CLIENT_SECRET: process.env.DISCORD_CLIENT_SECRET,
+
+  AUTH0_CLIENT_ID: process.env.AUTH0_CLIENT_ID,
+  AUTH0_CLIENT_SECRET: process.env.AUTH0_CLIENT_SECRET,
+  AUTH0_ISSUER: process.env.AUTH0_ISSUER,
 }
 
 const merged = server.merge(client)
