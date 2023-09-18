@@ -126,6 +126,29 @@ export default function MyTokens() {
                 </Tooltip>
               )}
             </CopyButton>
+            <Text fw='bold'>{'or'}</Text>
+            <Code>{'text-embedding-ada-002'}</Code>
+            <CopyButton value={'text-embedding-ada-002'}>
+              {({ copied, copy }) => (
+                <Tooltip
+                  label={copied ? 'Copied' : 'Copy'}
+                  withArrow
+                  position='right'
+                >
+                  <ActionIcon
+                    color={copied ? 'blue' : 'gray'}
+                    onClick={copy}
+                    variant='light'
+                  >
+                    {copied ? (
+                      <HiOutlineCheck size='1rem' />
+                    ) : (
+                      <HiOutlineClipboardDocument size='1rem' />
+                    )}
+                  </ActionIcon>
+                </Tooltip>
+              )}
+            </CopyButton>
           </Group>
 
           <Text fw='bold'>{'API Keys'}</Text>

@@ -5,7 +5,7 @@ export const OpenAIModelProviderFields: FormField[] = [
   {
     required: true,
     key: 'model',
-    schema: z.enum(['gpt-3.5-turbo', 'gpt-4']),
+    schema: z.enum(['gpt-3.5-turbo', 'gpt-4', 'text-embedding-ada-002']),
     label: 'Model',
     defaultValue: 'gpt-3.5-turbo',
   },
@@ -29,7 +29,7 @@ export const AzureAIModelProviderFields: FormField[] = [
   {
     required: true,
     key: 'model',
-    schema: z.enum(['gpt-3.5-turbo', 'gpt-4']),
+    schema: z.enum(['gpt-3.5-turbo', 'gpt-4', 'text-embedding-ada-002']),
     label: 'Model',
     defaultValue: 'gpt-3.5-turbo',
   },

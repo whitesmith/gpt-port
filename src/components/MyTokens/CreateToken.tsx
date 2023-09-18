@@ -130,6 +130,7 @@ function GenerateKeyForm(props: {
           <Stack>
             <CopyText title='Azure Base URL' text={`${apiHost}/api`} />
             <CopyText title='Azure Deployment Name' text='gpt-4' />
+            <CopyText title='Azure Deployment Name (embeddings)' text='text-embedding-ada-002' />
             <CopyText title='Azure API Key' text={token.token} />
           </Stack>
         </Stack>
