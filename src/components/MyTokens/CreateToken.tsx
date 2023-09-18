@@ -118,8 +118,19 @@ function GenerateKeyForm(props: {
             }
           </Text>
           <Stack>
-            <CopyText title={'API Endpoint'} text={`${apiHost}/api/openai`} />
-            <CopyText title='API Key' text={token.token} />
+            <CopyText title='OpenAI API Endpoint' text={`${apiHost}/api/openai`} />
+            <CopyText title='OpenAI API Key' text={token.token} />
+          </Stack>
+          <br/>
+          <Text>
+            {
+              "If you need to use the key in place of an Azure OpenAI endpoint use these credentials:"
+            }
+          </Text>
+          <Stack>
+            <CopyText title='Azure Base URL' text={`${apiHost}/api`} />
+            <CopyText title='Azure Deployment Name' text='gpt-4' />
+            <CopyText title='Azure API Key' text={token.token} />
           </Stack>
         </Stack>
       ),
