@@ -10,7 +10,7 @@ const passThroughHeaders = [
   'content-encoding',
 ]
 
-export const proxyCompletions = async (
+export const proxyOpenAI = async (
   ctx: Context,
   body: unknown,
   provider: ModelProvider,
