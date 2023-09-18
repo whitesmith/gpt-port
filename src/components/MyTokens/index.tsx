@@ -37,18 +37,18 @@ export default function MyTokens() {
 
   return (
     <Container size={'sm'} py='xl' sx={{ flex: 1 }}>
-      <Paper p='md'>
+      <Paper p='md' withBorder>
         <Stack>
           <Text color='dimmed'>
             {
-              'API Key should be used combined with the following API Host, could be used in any OpenAI compatible client with custom API host support.'
+              'To use the API Key with the official OpenAI library set the custom API host to the following url and use the key as instructed in the docs.'
             }
           </Text>
 
-          <Group>
-            <Text fw='bold'>{'API Host'}</Text>
-            <Code>{apiHost}</Code>
-            <CopyButton value={apiHost}>
+          <Group mb="md">
+            <Text fw='bold'>{'OpenAI API Host'}</Text>
+            <Code>{`${apiHost}/api/openai`}</Code>
+            <CopyButton value={`${apiHost}/api/openai`}>
               {({ copied, copy }) => (
                 <Tooltip
                   label={copied ? 'Copied' : 'Copy'}
@@ -71,6 +71,64 @@ export default function MyTokens() {
             </CopyButton>
           </Group>
 
+          <Text color='dimmed'>
+            {
+              'To use the key in place of an Azure OpenAI endpoint use these following credentials:'
+            }
+          </Text>
+
+          <Group>
+            <Text fw='bold'>{'Azure Base URL'}</Text>
+            <Code>{`${apiHost}/api`}</Code>
+            <CopyButton value={`${apiHost}/api`}>
+              {({ copied, copy }) => (
+                <Tooltip
+                  label={copied ? 'Copied' : 'Copy'}
+                  withArrow
+                  position='right'
+                >
+                  <ActionIcon
+                    color={copied ? 'blue' : 'gray'}
+                    onClick={copy}
+                    variant='light'
+                  >
+                    {copied ? (
+                      <HiOutlineCheck size='1rem' />
+                    ) : (
+                      <HiOutlineClipboardDocument size='1rem' />
+                    )}
+                  </ActionIcon>
+                </Tooltip>
+              )}
+            </CopyButton>
+          </Group>
+          <Group mb="md">
+            <Text fw='bold'>{'Azure Deployment Name'}</Text>
+            <Code>{'gpt-4'}</Code>
+            <CopyButton value={'gpt-4'}>
+              {({ copied, copy }) => (
+                <Tooltip
+                  label={copied ? 'Copied' : 'Copy'}
+                  withArrow
+                  position='right'
+                >
+                  <ActionIcon
+                    color={copied ? 'blue' : 'gray'}
+                    onClick={copy}
+                    variant='light'
+                  >
+                    {copied ? (
+                      <HiOutlineCheck size='1rem' />
+                    ) : (
+                      <HiOutlineClipboardDocument size='1rem' />
+                    )}
+                  </ActionIcon>
+                </Tooltip>
+              )}
+            </CopyButton>
+          </Group>
+
+          <Text fw='bold'>{'API Keys'}</Text>
           <TokensTable tokens={data || {}} onDelete={handleRevokeKey} />
 
           <Box>

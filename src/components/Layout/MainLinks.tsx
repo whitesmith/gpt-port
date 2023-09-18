@@ -47,13 +47,13 @@ const data = [
   {
     icon: <HiOutlineHome size='1rem' />,
     color: 'blue',
-    label: 'Home',
+    label: 'API Keys',
     href: '/',
   },
   {
     icon: <HiOutlineServerStack size='1rem' />,
     color: 'grape',
-    label: 'Admin',
+    label: 'Model Providers',
     adminOnly: true,
     href: '/admin',
   },

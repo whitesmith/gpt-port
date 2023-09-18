@@ -48,7 +48,7 @@ export default function TokensTable(props: Props) {
         <tr>
           <th>Label</th>
           <th>Key</th>
-          <th>Expire</th>
+          <th>Expires</th>
           <th></th>
         </tr>
       </thead>

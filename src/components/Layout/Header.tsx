@@ -1,4 +1,3 @@
-import { FaGithub } from 'react-icons/fa'
 import { MdAirplaneTicket } from 'react-icons/md'
 import {
   MediaQuery,
@@ -7,9 +6,7 @@ import {
   useMantineTheme,
   Title,
   Group,
-  Anchor,
   Box,
-  ThemeIcon,
 } from '@mantine/core'
 
 export default function AppHeader(props: {
@@ -42,13 +39,7 @@ export default function AppHeader(props: {
           </Title>
         </Group>
 
-        <Anchor
-          href='https://github.com/hopsken/gpt-port'
-          target='_blank'
-          color='dark'
-        >
-          <FaGithub size={24} />
-        </Anchor>
+        <Box />
       </Group>
     </Header>
   )

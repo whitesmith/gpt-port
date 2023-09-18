@@ -42,7 +42,7 @@ export default function CreateToken() {
   }
 
   return (
-    <Button variant='outline' size={'sm'} onClick={() => setGenerating(true)}>
+    <Button variant='filled' fullWidth size={'sm'} onClick={() => setGenerating(true)}>
       New Key
     </Button>
   )
