@@ -64,7 +64,10 @@ handler
     '/v1/embeddings',
     zValidator('json', z.object({
       model: z.string().min(1),
-      input: z.string().min(1),
+      input: z.union([
+        z.string().min(1),
+        z.array(z.string().min(1))
+      ])
     }).passthrough()),
     validateAPIToken,
     embeddings
@@ -84,7 +87,10 @@ handler
   .post(
     '/deployments/*/embeddings',
     zValidator('json', z.object({
-      input: z.string().min(1),
+      input: z.union([
+        z.string().min(1),
+        z.array(z.string().min(1))
+      ])
     }).passthrough()),
     validateAPIToken,
     embeddings
