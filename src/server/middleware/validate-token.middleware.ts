@@ -9,7 +9,10 @@ import { MiddlewareHandler } from 'hono'
 async function validateByAPIKey(ctx: Context): Promise<ApiToken> {
   const redis = ctx.env.redis
 
-  const apiKey = ctx.req.header('Authorization')?.split(' ')[1]
+  // Start with OpenAI default auth
+  let apiKey = ctx.req.header('Authorization')?.split(' ')[1]
+  // Try Azure auth headers
+  if (!apiKey) { apiKey = ctx.req.header('api-key') }
   if (!apiKey) {
     throw new HTTPException(401, {
       message: 'Invalid Authentication',
