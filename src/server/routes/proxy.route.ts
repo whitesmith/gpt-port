@@ -44,6 +44,23 @@ const embeddings: MiddlewareHandler<Env> = async c => {
   return proxyOpenAI(c, result, provider, '/v1/embeddings')
 }
 
+const models: MiddlewareHandler<Env> = async c => {
+  const redis = c.env.redis
+  const modelController = new ModelController(redis)
+
+  const models = await modelController.getModels()
+
+  return c.json({
+    "object": "list",
+    "data": Object.values(models).map(({ model, type }) => ({
+      "id": model,
+      "object": "model",
+      "created": 1686935002,
+      "owned_by": type
+    }))
+  })
+}
+
 const handler = createHandler()
 
 handler
@@ -71,6 +88,11 @@ handler
     }).passthrough()),
     validateAPIToken,
     embeddings
+  )
+  .get(
+    '/v1/models',
+    validateAPIToken,
+    models
   )
   // AZURE APIs
   .post(
