@@ -86,7 +86,10 @@ handler
     '/v1/completions',
     zValidator('json', z.object({
       model: z.string().min(1),
-      prompt: z.string().min(1)
+      prompt: z.union([
+        z.string().min(1),
+        z.array(z.string().min(1))
+      ])
     }).passthrough()),
     validateAPIToken,
     completions
@@ -124,7 +127,10 @@ handler
     '/deployments/*/completions',
     zValidator('json', z.object({
       model: z.string().min(1),
-      prompt: z.string().min(1)
+      prompt: z.union([
+        z.string().min(1),
+        z.array(z.string().min(1))
+      ])
     }).passthrough()),
     validateAPIToken,
     completions
