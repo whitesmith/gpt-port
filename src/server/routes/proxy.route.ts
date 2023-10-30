@@ -36,6 +36,11 @@ const processRequest = async (c:Context) => {
 
 const completions: MiddlewareHandler<Env> = async c => {
   const { result, provider } = await processRequest(c)
+  return proxyOpenAI(c, result, provider, '/v1/completions')
+}
+
+const chatCompletions: MiddlewareHandler<Env> = async c => {
+  const { result, provider } = await processRequest(c)
   return proxyOpenAI(c, result, provider, '/v1/chat/completions')
 }
 
@@ -75,6 +80,15 @@ handler
       })).min(1)
     }).passthrough()),
     validateAPIToken,
+    chatCompletions
+  )
+  .post(
+    '/v1/completions',
+    zValidator('json', z.object({
+      model: z.string().min(1),
+      prompt: z.string().min(1)
+    }).passthrough()),
+    validateAPIToken,
     completions
   )
   .post(
@@ -102,6 +116,15 @@ handler
         role: z.string(),
         content: z.string(),
       })).min(1)
+    }).passthrough()),
+    validateAPIToken,
+    chatCompletions
+  )
+  .post(
+    '/deployments/*/completions',
+    zValidator('json', z.object({
+      model: z.string().min(1),
+      prompt: z.string().min(1)
     }).passthrough()),
     validateAPIToken,
     completions
