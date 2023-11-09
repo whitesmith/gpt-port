@@ -101,6 +101,28 @@ export default function MyTokens() {
                 </Tooltip>
               )}
             </CopyButton>
+            <Text fw='bold'>{'or'}</Text>
+            <CopyButton value={`${apiHost}/api/openai/deployments`}>
+              {({ copied, copy }) => (
+                <Tooltip
+                  label={copied ? 'Copied' : 'Copy'}
+                  withArrow
+                  position='right'
+                >
+                  <ActionIcon
+                    color={copied ? 'blue' : 'gray'}
+                    onClick={copy}
+                    variant='light'
+                  >
+                    {copied ? (
+                      <HiOutlineCheck size='1rem' />
+                    ) : (
+                      <HiOutlineClipboardDocument size='1rem' />
+                    )}
+                  </ActionIcon>
+                </Tooltip>
+              )}
+            </CopyButton>
           </Group>
           <Group mb="md">
             <Text fw='bold'>{'Azure Deployment Name'}</Text>
