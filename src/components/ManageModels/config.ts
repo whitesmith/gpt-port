@@ -29,7 +29,7 @@ export const AzureAIModelProviderFields: FormField[] = [
   {
     required: true,
     key: 'model',
-    schema: z.enum(['gpt-3.5-turbo', 'gpt-35-turbo-16k', 'gpt-4', 'gpt-4-turbo', 'gpt-4-32k', 'text-embedding-ada-002']),
+    schema: z.enum(['gpt-3.5-turbo', 'gpt-35-turbo-16k', 'gpt-35-turbo-1106', 'gpt-4', 'gpt-4-turbo', 'gpt-4-32k', 'text-embedding-ada-002']),
     label: 'Model',
     defaultValue: 'gpt-3.5-turbo',
   },

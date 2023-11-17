@@ -126,51 +126,9 @@ export default function MyTokens() {
           </Group>
           <Group mb="md">
             <Text fw='bold'>{'Azure Deployment Name'}</Text>
-            <Code>{'gpt-4-turbo'}</Code>
-            <CopyButton value={'gpt-4-turbo'}>
-              {({ copied, copy }) => (
-                <Tooltip
-                  label={copied ? 'Copied' : 'Copy'}
-                  withArrow
-                  position='right'
-                >
-                  <ActionIcon
-                    color={copied ? 'blue' : 'gray'}
-                    onClick={copy}
-                    variant='light'
-                  >
-                    {copied ? (
-                      <HiOutlineCheck size='1rem' />
-                    ) : (
-                      <HiOutlineClipboardDocument size='1rem' />
-                    )}
-                  </ActionIcon>
-                </Tooltip>
-              )}
-            </CopyButton>
-            <Text fw='bold'>{'or'}</Text>
-            <Code>{'text-embedding-ada-002'}</Code>
-            <CopyButton value={'text-embedding-ada-002'}>
-              {({ copied, copy }) => (
-                <Tooltip
-                  label={copied ? 'Copied' : 'Copy'}
-                  withArrow
-                  position='right'
-                >
-                  <ActionIcon
-                    color={copied ? 'blue' : 'gray'}
-                    onClick={copy}
-                    variant='light'
-                  >
-                    {copied ? (
-                      <HiOutlineCheck size='1rem' />
-                    ) : (
-                      <HiOutlineClipboardDocument size='1rem' />
-                    )}
-                  </ActionIcon>
-                </Tooltip>
-              )}
-            </CopyButton>
+            {['gpt-4-turbo', 'gpt-35-turbo-1106', 'gpt-4', 'gpt-3.5-turbo', 'gpt-4-32k', 'gpt-35-turbo-16k', 'text-embedding-ada-002'].map((deploymentName) => (
+              <Code key={deploymentName}>{deploymentName}</Code>
+            ))}
           </Group>
 
           <Text fw='bold'>{'API Keys'}</Text>
