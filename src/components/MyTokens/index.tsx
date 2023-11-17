@@ -126,8 +126,8 @@ export default function MyTokens() {
           </Group>
           <Group mb="md">
             <Text fw='bold'>{'Azure Deployment Name'}</Text>
-            <Code>{'gpt-4'}</Code>
-            <CopyButton value={'gpt-4'}>
+            <Code>{'gpt-4-turbo'}</Code>
+            <CopyButton value={'gpt-4-turbo'}>
               {({ copied, copy }) => (
                 <Tooltip
                   label={copied ? 'Copied' : 'Copy'}

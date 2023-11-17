@@ -130,7 +130,7 @@ function GenerateKeyForm(props: {
           <Stack>
             <CopyText title='Azure Base URL' text={`${apiHost}/api`} />
             <CopyText title='(if it does not work, try this)' text={`${apiHost}/api/openai/deployments`} />
-            <CopyText title='Azure Deployment Name' text='gpt-4' />
+            <CopyText title='Azure Deployment Name' text='gpt-4-turbo' />
             <CopyText title='Azure Deployment Name (embeddings)' text='text-embedding-ada-002' />
             <CopyText title='Azure API Key' text={token.token} />
           </Stack>
