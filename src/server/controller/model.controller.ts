@@ -15,7 +15,11 @@ export class ModelController {
     const providers = await this.redis.hgetall<StoredModels>(this.storageKey)
     if (!providers) return
 
-    for (const provider of Object.values(providers)) {
+    const values: ModelProvider[] = Object.values(providers);
+    // Randomly decide if we should reverse the order
+    if (Math.random() < 0.5) values.reverse();
+
+    for (const provider of values) {
       if (provider.model === model) {
         return provider
       }
