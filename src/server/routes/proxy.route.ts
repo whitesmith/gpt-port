@@ -68,41 +68,50 @@ const models: MiddlewareHandler<Env> = async c => {
 
 const handler = createHandler()
 
+const chatCompletionsValidator = z.object({
+  model: z.string(),
+  messages: z.array(z.object({
+    role: z.string(),
+    content: z.union([
+      z.string().min(1),
+      z.array(z.any()),
+    ])
+  })).min(1)
+}).passthrough()
+
+const completionsValidator = z.object({
+  model: z.string(),
+  prompt: z.union([
+    z.string().min(1),
+    z.array(z.string().min(1))
+  ])
+}).passthrough()
+
+const embeddingsValidator = z.object({
+  model: z.string(),
+  input: z.union([
+    z.string().min(1),
+    z.array(z.string().min(1))
+  ])
+}).passthrough()
+
 handler
   // OPENAI APIs
   .post(
     '/v1/chat/completions',
-    zValidator('json', z.object({
-      model: z.string().min(1),
-      messages: z.array(z.object({
-        role: z.string(),
-        content: z.string(),
-      })).min(1)
-    }).passthrough()),
+    zValidator('json', chatCompletionsValidator),
     validateAPIToken,
     chatCompletions
   )
   .post(
     '/v1/completions',
-    zValidator('json', z.object({
-      model: z.string().min(1),
-      prompt: z.union([
-        z.string().min(1),
-        z.array(z.string().min(1))
-      ])
-    }).passthrough()),
+    zValidator('json', completionsValidator),
     validateAPIToken,
     completions
   )
   .post(
     '/v1/embeddings',
-    zValidator('json', z.object({
-      model: z.string().min(1),
-      input: z.union([
-        z.string().min(1),
-        z.array(z.string().min(1))
-      ])
-    }).passthrough()),
+    zValidator('json', embeddingsValidator),
     validateAPIToken,
     embeddings
   )
@@ -114,39 +123,22 @@ handler
   // AZURE APIs
   .post(
     '/deployments/*/chat/completions',
-    zValidator('json', z.object({
-      messages: z.array(z.object({
-        role: z.string(),
-        content: z.string(),
-      })).min(1)
-    }).passthrough()),
+    zValidator('json', chatCompletionsValidator),
     validateAPIToken,
     chatCompletions
   )
   .post(
     '/deployments/*/completions',
-    zValidator('json', z.object({
-      model: z.string().min(1),
-      prompt: z.union([
-        z.string().min(1),
-        z.array(z.string().min(1))
-      ])
-    }).passthrough()),
+    zValidator('json', completionsValidator),
     validateAPIToken,
     completions
   )
   .post(
     '/deployments/*/embeddings',
-    zValidator('json', z.object({
-      input: z.union([
-        z.string().min(1),
-        z.array(z.string().min(1))
-      ])
-    }).passthrough()),
+    zValidator('json', embeddingsValidator),
     validateAPIToken,
     embeddings
   )
-  
 
 
 export default handler
