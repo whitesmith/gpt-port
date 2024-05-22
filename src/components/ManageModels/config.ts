@@ -38,6 +38,7 @@ export const AzureAIModelProviderFields: FormField[] = [
       'gpt-4-turbo',
       'gpt-4-vision-preview',
       'gpt-4-vision',
+      'gpt-4o',
       'gpt-4',
       'text-embedding-ada-002'
     ]),

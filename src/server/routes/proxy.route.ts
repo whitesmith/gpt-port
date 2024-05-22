@@ -69,7 +69,7 @@ const models: MiddlewareHandler<Env> = async c => {
 const handler = createHandler()
 
 const chatCompletionsValidator = z.object({
-  model: z.string(),
+  model: z.string().optional(),
   messages: z.array(z.object({
     role: z.string(),
     content: z.union([
@@ -80,7 +80,7 @@ const chatCompletionsValidator = z.object({
 }).passthrough()
 
 const completionsValidator = z.object({
-  model: z.string(),
+  model: z.string().optional(),
   prompt: z.union([
     z.string().min(1),
     z.array(z.string().min(1))
@@ -88,7 +88,7 @@ const completionsValidator = z.object({
 }).passthrough()
 
 const embeddingsValidator = z.object({
-  model: z.string(),
+  model: z.string().optional(),
   input: z.union([
     z.string().min(1),
     z.array(z.string().min(1))
