@@ -73,7 +73,7 @@ const chatCompletionsValidator = z.object({
   messages: z.array(z.object({
     role: z.string(),
     content: z.union([
-      z.string().min(1),
+      z.string(),
       z.array(z.any()),
     ])
   })).min(1)
@@ -82,7 +82,7 @@ const chatCompletionsValidator = z.object({
 const completionsValidator = z.object({
   model: z.string().optional(),
   prompt: z.union([
-    z.string().min(1),
+    z.string(),
     z.array(z.string().min(1))
   ])
 }).passthrough()
@@ -90,16 +90,10 @@ const completionsValidator = z.object({
 const embeddingsValidator = z.object({
   model: z.string().optional(),
   input: z.union([
-    z.string().min(1),
+    z.string(),
     z.array(z.string().min(1))
   ])
 }).passthrough()
-
-const logRequestBody: MiddlewareHandler = async (c, next) => {
-  const body = await c.req.json()
-  console.log('Request body:', body)
-  await next()
-}
 
 handler
   // OPENAI APIs
@@ -129,7 +123,6 @@ handler
   // AZURE APIs
   .post(
     '/deployments/*/chat/completions',
-    logRequestBody,
     zValidator('json', chatCompletionsValidator),
     validateAPIToken,
     chatCompletions
