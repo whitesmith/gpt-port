@@ -83,7 +83,7 @@ const completionsValidator = z.object({
   model: z.string().optional(),
   prompt: z.union([
     z.string(),
-    z.array(z.string().min(1))
+    z.array(z.string())
   ])
 }).passthrough()
 
@@ -91,7 +91,7 @@ const embeddingsValidator = z.object({
   model: z.string().optional(),
   input: z.union([
     z.string(),
-    z.array(z.string().min(1))
+    z.array(z.string())
   ])
 }).passthrough()
 
