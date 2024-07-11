@@ -95,6 +95,12 @@ const embeddingsValidator = z.object({
   ])
 }).passthrough()
 
+const logRequestBody: MiddlewareHandler = async (c, next) => {
+  const body = await c.req.json()
+  console.log('Request body:', body)
+  await next()
+}
+
 handler
   // OPENAI APIs
   .post(
@@ -123,7 +129,8 @@ handler
   // AZURE APIs
   .post(
     '/deployments/*/chat/completions',
-    // zValidator('json', chatCompletionsValidator),
+    logRequestBody,
+    zValidator('json', chatCompletionsValidator),
     validateAPIToken,
     chatCompletions
   )
