@@ -123,7 +123,7 @@ handler
   // AZURE APIs
   .post(
     '/deployments/*/chat/completions',
-    zValidator('json', chatCompletionsValidator),
+    // zValidator('json', chatCompletionsValidator),
     validateAPIToken,
     chatCompletions
   )
