@@ -108,6 +108,7 @@ function transformStream(readableStream: ReadableStream<Uint8Array> | null): Rea
   let buffer = ''
   let messageId = `chatcmpl-${Date.now()}`
   let created = Math.floor(Date.now() / 1000)
+  console.log('Starting stream transformation')
 
   return readableStream
     .pipeThrough(new TextDecoderStream())
@@ -120,6 +121,8 @@ function transformStream(readableStream: ReadableStream<Uint8Array> | null): Rea
         for (const line of lines) {
           if (line.startsWith('data: ')) {
             const data = JSON.parse(line.slice(6))
+            console.log('Received event:', data.type)
+
             if (data.type === 'message_start') {
               controller.enqueue(JSON.stringify({
                 id: messageId,
@@ -133,6 +136,7 @@ function transformStream(readableStream: ReadableStream<Uint8Array> | null): Rea
                   finish_reason: null
                 }]
               }) + '\n')
+              console.log('Sent message_start chunk')
             } else if (data.type === 'content_block_delta') {
               controller.enqueue(JSON.stringify({
                 id: messageId,
@@ -146,6 +150,7 @@ function transformStream(readableStream: ReadableStream<Uint8Array> | null): Rea
                   finish_reason: null
                 }]
               }) + '\n')
+              console.log('Sent content chunk:', data.delta.text)
             } else if (data.type === 'message_stop') {
               controller.enqueue(JSON.stringify({
                 id: messageId,
@@ -159,6 +164,7 @@ function transformStream(readableStream: ReadableStream<Uint8Array> | null): Rea
                   finish_reason: 'stop'
                 }]
               }) + '\n')
+              console.log('Sent message_stop chunk')
             }
           }
         }
