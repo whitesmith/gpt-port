@@ -119,7 +119,6 @@ function transformStream(readableStream: ReadableStream<Uint8Array> | null): Rea
         buffer = lines.pop() || ''
 
         for (const line of lines) {
-          console.log('Received:', line)
           if (line.startsWith('data: ')) {
             const data = JSON.parse(line.slice(6))
 
@@ -137,6 +136,7 @@ function transformStream(readableStream: ReadableStream<Uint8Array> | null): Rea
                 }]
               }) + '\n'
               controller.enqueue(msg)
+              console.log('Received:', line)
               console.log('Sending:', msg)
             } else if (data.type === 'content_block_delta') {
               const msg = JSON.stringify({
@@ -152,6 +152,7 @@ function transformStream(readableStream: ReadableStream<Uint8Array> | null): Rea
                 }]
               }) + '\n'
               controller.enqueue(msg)
+              console.log('Received:', line)
               console.log('Sending:', msg)
             } else if (data.type === 'message_stop') {
               const msg = JSON.stringify({
@@ -167,6 +168,7 @@ function transformStream(readableStream: ReadableStream<Uint8Array> | null): Rea
                 }]
               }) + '\n'
               controller.enqueue(msg)
+              console.log('Received:', line)
               console.log('Sending:', msg)
             }
           }
