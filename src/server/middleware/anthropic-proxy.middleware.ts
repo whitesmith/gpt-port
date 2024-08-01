@@ -39,6 +39,13 @@ export const proxyAnthropic = async (
     newHeaders.set('content-encoding', 'none')
   }
 
+  if (transformedBody.stream) {
+    return new Response(transformStream(response.body), {
+      headers: newHeaders,
+      status: response.status,
+    })
+  }
+
   return new Response(response.body, {
     headers: newHeaders,
     status: response.status,
@@ -91,4 +98,71 @@ function transformRequestBody(body: any) {
 
   console.log('transformedBody', transformedBody)
   return transformedBody
+}
+
+function transformStream(readableStream: ReadableStream<Uint8Array> | null): ReadableStream<Uint8Array> {
+  if (!readableStream) {
+    throw new Error('No readable stream available')
+  }
+
+  let buffer = ''
+  let messageId = `chatcmpl-${Date.now()}`
+  let created = Math.floor(Date.now() / 1000)
+
+  return readableStream
+    .pipeThrough(new TextDecoderStream())
+    .pipeThrough(new TransformStream({
+      transform(chunk, controller) {
+        buffer += chunk
+        const lines = buffer.split('\n')
+        buffer = lines.pop() || ''
+
+        for (const line of lines) {
+          if (line.startsWith('data: ')) {
+            const data = JSON.parse(line.slice(6))
+            if (data.type === 'message_start') {
+              controller.enqueue(JSON.stringify({
+                id: messageId,
+                object: 'chat.completion.chunk',
+                created: created,
+                model: data.message.model,
+                choices: [{
+                  index: 0,
+                  delta: { role: 'assistant' },
+                  logprobs: null,
+                  finish_reason: null
+                }]
+              }) + '\n')
+            } else if (data.type === 'content_block_delta') {
+              controller.enqueue(JSON.stringify({
+                id: messageId,
+                object: 'chat.completion.chunk',
+                created: created,
+                model: 'claude-3-5-sonnet-20240620', // You might want to store and use the actual model
+                choices: [{
+                  index: 0,
+                  delta: { content: data.delta.text },
+                  logprobs: null,
+                  finish_reason: null
+                }]
+              }) + '\n')
+            } else if (data.type === 'message_stop') {
+              controller.enqueue(JSON.stringify({
+                id: messageId,
+                object: 'chat.completion.chunk',
+                created: created,
+                model: 'claude-3-5-sonnet-20240620', // You might want to store and use the actual model
+                choices: [{
+                  index: 0,
+                  delta: {},
+                  logprobs: null,
+                  finish_reason: 'stop'
+                }]
+              }) + '\n')
+            }
+          }
+        }
+      }
+    }))
+    .pipeThrough(new TextEncoderStream())
 }
