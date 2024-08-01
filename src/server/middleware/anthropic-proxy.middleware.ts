@@ -89,5 +89,6 @@ function transformRequestBody(body: any) {
     transformedBody.max_tokens = 4096
   }
 
+  console.log('transformedBody', transformedBody)
   return transformedBody
 }
