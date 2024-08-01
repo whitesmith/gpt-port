@@ -7,9 +7,8 @@ import { proxyOpenAI } from '../middleware/openai-proxy.middleware'
 import { validateAPIToken } from '../middleware/validate-token.middleware'
 import { MiddlewareHandler, Context } from 'hono'
 import { Env } from '../types'
-import { proxyAnthropic } from '../middleware/anthropic-proxy.middleware'
 
-const processRequest = async (c:Context) => {
+export const processRequest = async (c:Context) => {
   const result = await c.req.valid('json')
   let model = null;
   if ('model' in result) {
@@ -35,22 +34,22 @@ const processRequest = async (c:Context) => {
   }
 }
 
-const completions: MiddlewareHandler<Env> = async c => {
+export const completions: MiddlewareHandler<Env> = async c => {
   const { result, provider } = await processRequest(c)
   return proxyOpenAI(c, result, provider, '/v1/completions')
 }
 
-const chatCompletions: MiddlewareHandler<Env> = async c => {
+export const chatCompletions: MiddlewareHandler<Env> = async c => {
   const { result, provider } = await processRequest(c)
   return proxyOpenAI(c, result, provider, '/v1/chat/completions')
 }
 
-const embeddings: MiddlewareHandler<Env> = async c => {
+export const embeddings: MiddlewareHandler<Env> = async c => {
   const { result, provider } = await processRequest(c)
   return proxyOpenAI(c, result, provider, '/v1/embeddings')
 }
 
-const models: MiddlewareHandler<Env> = async c => {
+export const models: MiddlewareHandler<Env> = async c => {
   const redis = c.env.redis
   const modelController = new ModelController(redis)
 
@@ -67,14 +66,9 @@ const models: MiddlewareHandler<Env> = async c => {
   })
 }
 
-const anthropicChatCompletions: MiddlewareHandler<Env> = async c => {
-  const { result, provider } = await processRequest(c)
-  return proxyAnthropic(c, result, provider, '/v1/chat/completions')
-}
-
 const handler = createHandler()
 
-const chatCompletionsValidator = z.object({
+export const chatCompletionsValidator = z.object({
   model: z.string().optional(),
   messages: z.array(z.object({
     role: z.string(),
@@ -85,7 +79,7 @@ const chatCompletionsValidator = z.object({
   })).min(1)
 }).passthrough()
 
-const completionsValidator = z.object({
+export const completionsValidator = z.object({
   model: z.string().optional(),
   prompt: z.union([
     z.string(),
@@ -93,7 +87,7 @@ const completionsValidator = z.object({
   ])
 }).passthrough()
 
-const embeddingsValidator = z.object({
+export const embeddingsValidator = z.object({
   model: z.string().optional(),
   input: z.union([
     z.string(),
@@ -145,13 +139,5 @@ handler
     validateAPIToken,
     embeddings
   )
-  // ANTHROPIC PROXY FROM AZURE APIs
-  .post(
-    '/anthropic/deployments/*/chat/completions',
-    zValidator('json', chatCompletionsValidator),
-    validateAPIToken,
-    anthropicChatCompletions
-  )
-
 
 export default handler
