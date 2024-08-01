@@ -130,7 +130,7 @@ function transformStream(readableStream: ReadableStream<Uint8Array> | null): Rea
                 model: data.message.model,
                 choices: [{
                   index: 0,
-                  delta: { role: 'assistant' },
+                  delta: { role: 'assistant', content: '' },
                   logprobs: null,
                   finish_reason: null
                 }]
@@ -143,7 +143,7 @@ function transformStream(readableStream: ReadableStream<Uint8Array> | null): Rea
                 id: messageId,
                 object: 'chat.completion.chunk',
                 created: created,
-                model: 'claude-3-5-sonnet-20240620', // You might want to store and use the actual model
+                model: 'gpt-3.5-turbo',
                 choices: [{
                   index: 0,
                   delta: { content: data.delta.text },
@@ -159,7 +159,7 @@ function transformStream(readableStream: ReadableStream<Uint8Array> | null): Rea
                 id: messageId,
                 object: 'chat.completion.chunk',
                 created: created,
-                model: 'claude-3-5-sonnet-20240620', // You might want to store and use the actual model
+                model: 'gpt-3.5-turbo',
                 choices: [{
                   index: 0,
                   delta: {},
