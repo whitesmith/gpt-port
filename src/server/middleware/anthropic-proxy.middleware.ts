@@ -12,7 +12,6 @@ const passThroughHeaders = [
 export const proxyAnthropic = async (
   ctx: Context,
   body: unknown,
-  _provider: ModelProvider,
   targetPath: string
 ): Promise<Response> => {
   const req = ctx.req

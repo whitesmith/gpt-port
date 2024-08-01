@@ -17,7 +17,7 @@ const routes = [
     handler: OpenAIProxyRoute,
   },
   {
-    path: '/anthropic/openai',
+    path: '/anthropic',
     handler: AnthropicProxyRoute,
   },
 ]

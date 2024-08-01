@@ -4,11 +4,11 @@ import { validateAPIToken } from '../middleware/validate-token.middleware'
 import { MiddlewareHandler } from 'hono'
 import { Env } from '../types'
 import { proxyAnthropic } from '../middleware/anthropic-proxy.middleware'
-import { processRequest, chatCompletionsValidator } from './proxy.route'
+import { chatCompletionsValidator } from './proxy.route'
 
 const anthropicChatCompletions: MiddlewareHandler<Env> = async c => {
-  const { result, provider } = await processRequest(c)
-  return proxyAnthropic(c, result, provider, '/v1/chat/completions')
+  const result = await c.req.valid('json')
+  return proxyAnthropic(c, result, '/v1/chat/completions')
 }
 
 const handler = createHandler()
@@ -16,7 +16,7 @@ const handler = createHandler()
 handler
   // ANTHROPIC PROXY FROM AZURE APIs
   .post(
-    '/deployments/*/chat/completions',
+    '/openai/deployments/*/chat/completions',
     zValidator('json', chatCompletionsValidator),
     validateAPIToken,
     anthropicChatCompletions
