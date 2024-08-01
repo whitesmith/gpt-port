@@ -59,6 +59,15 @@ function transformRequestBody(body: any) {
 
   const transformedBody: any = { ...body }
 
+  // Rename the model
+  if (transformedBody.model) {
+    if (transformedBody.model.includes('gpt-4')) {
+      transformedBody.model = 'claude-3-5-sonnet-20240620'
+    } else if (transformedBody.model.includes('gpt-3')) {
+      transformedBody.model = 'claude-3-haiku-20240307'
+    }
+  }
+
   // Convert OpenAI format to Anthropic format
   if (transformedBody.messages) {
     let systemMessage = null;
