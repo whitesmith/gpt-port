@@ -119,12 +119,12 @@ function transformStream(readableStream: ReadableStream<Uint8Array> | null): Rea
         buffer = lines.pop() || ''
 
         for (const line of lines) {
+          console.log('Received:', line)
           if (line.startsWith('data: ')) {
             const data = JSON.parse(line.slice(6))
-            console.log('Received event:', data.type)
 
             if (data.type === 'message_start') {
-              controller.enqueue(JSON.stringify({
+              const msg = JSON.stringify({
                 id: messageId,
                 object: 'chat.completion.chunk',
                 created: created,
@@ -135,10 +135,11 @@ function transformStream(readableStream: ReadableStream<Uint8Array> | null): Rea
                   logprobs: null,
                   finish_reason: null
                 }]
-              }) + '\n')
-              console.log('Sent message_start chunk')
+              }) + '\n'
+              controller.enqueue(msg)
+              console.log('Sending:', msg)
             } else if (data.type === 'content_block_delta') {
-              controller.enqueue(JSON.stringify({
+              const msg = JSON.stringify({
                 id: messageId,
                 object: 'chat.completion.chunk',
                 created: created,
@@ -149,10 +150,11 @@ function transformStream(readableStream: ReadableStream<Uint8Array> | null): Rea
                   logprobs: null,
                   finish_reason: null
                 }]
-              }) + '\n')
-              console.log('Sent content chunk:', data.delta.text)
+              }) + '\n'
+              controller.enqueue(msg)
+              console.log('Sending:', msg)
             } else if (data.type === 'message_stop') {
-              controller.enqueue(JSON.stringify({
+              const msg = JSON.stringify({
                 id: messageId,
                 object: 'chat.completion.chunk',
                 created: created,
@@ -163,8 +165,9 @@ function transformStream(readableStream: ReadableStream<Uint8Array> | null): Rea
                   logprobs: null,
                   finish_reason: 'stop'
                 }]
-              }) + '\n')
-              console.log('Sent message_stop chunk')
+              }) + '\n'
+              controller.enqueue(msg)
+              console.log('Sending:', msg)
             }
           }
         }
