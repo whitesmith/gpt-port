@@ -8,6 +8,7 @@ import { chatCompletionsValidator } from './proxy.route'
 
 const anthropicChatCompletions: MiddlewareHandler<Env> = async c => {
   const result = await c.req.valid('json')
+  console.log("result", result)
   return proxyAnthropic(c, result, '/v1/chat/completions')
 }
 
@@ -16,7 +17,7 @@ const handler = createHandler()
 handler
   // ANTHROPIC PROXY FROM AZURE APIs
   .post(
-    '/openai/deployments/*/chat/completions',
+    '/deployments/*/chat/completions',
     zValidator('json', chatCompletionsValidator),
     validateAPIToken,
     anthropicChatCompletions
