@@ -7,6 +7,7 @@ import { proxyOpenAI } from '../middleware/openai-proxy.middleware'
 import { validateAPIToken } from '../middleware/validate-token.middleware'
 import { MiddlewareHandler, Context } from 'hono'
 import { Env } from '../types'
+import { proxyAnthropic } from '../middleware/anthropic-proxy.middleware'
 
 const processRequest = async (c:Context) => {
   const result = await c.req.valid('json')
@@ -64,6 +65,11 @@ const models: MiddlewareHandler<Env> = async c => {
       "owned_by": type
     }))
   })
+}
+
+const anthropicChatCompletions: MiddlewareHandler<Env> = async c => {
+  const { result, provider } = await processRequest(c)
+  return proxyAnthropic(c, result, provider, '/v1/chat/completions')
 }
 
 const handler = createHandler()
@@ -138,6 +144,13 @@ handler
     zValidator('json', embeddingsValidator),
     validateAPIToken,
     embeddings
+  )
+  // ANTHROPIC PROXY FROM AZURE APIs
+  .post(
+    '/anthropic/deployments/*/chat/completions',
+    zValidator('json', chatCompletionsValidator),
+    validateAPIToken,
+    anthropicChatCompletions
   )
 
 
