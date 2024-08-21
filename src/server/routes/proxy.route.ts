@@ -10,7 +10,6 @@ import { Env } from '../types'
 
 export const processRequest = async (c:Context) => {
   const result = await c.req.valid('json')
-  console.log("result", result)
   let model = null;
   if ('model' in result) {
     // Get model from body
