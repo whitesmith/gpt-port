@@ -47,8 +47,8 @@ export default function MyTokens() {
 
           <Group mb="md">
             <Text fw='bold'>{'OpenAI API Host'}</Text>
-            <Code>{`${apiHost}/api/openai`}</Code>
-            <CopyButton value={`${apiHost}/api/openai`}>
+            <Code>{`${apiHost}/api/openai/v1`}</Code>
+            <CopyButton value={`${apiHost}/api/openai/v1`}>
               {({ copied, copy }) => (
                 <Tooltip
                   label={copied ? 'Copied' : 'Copy'}

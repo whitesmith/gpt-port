@@ -118,7 +118,7 @@ function GenerateKeyForm(props: {
             }
           </Text>
           <Stack>
-            <CopyText title='OpenAI API Endpoint' text={`${apiHost}/api/openai`} />
+            <CopyText title='OpenAI API Endpoint' text={`${apiHost}/api/openai/v1`} />
             <CopyText title='OpenAI API Key' text={token.token} />
           </Stack>
           <br/>
