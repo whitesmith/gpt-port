@@ -16,6 +16,8 @@ export const OpenAIModelProviderFields: FormField[] = [
       'gpt-4o-realtime-preview-2024-10-01',
       'gpt-4o-audio-preview',
       'gpt-4o-audio-preview-2024-10-01',
+      'o1',
+      'o1-2024-12-17',
       'o1-preview',
       'o1-preview-2024-09-12',
       'o1-mini',
