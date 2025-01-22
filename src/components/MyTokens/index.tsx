@@ -131,6 +131,45 @@ export default function MyTokens() {
             ))}
           </Group>
 
+
+          <Text color='dimmed'>
+            {
+              'To access Fireworks.ai models:'
+            }
+          </Text>
+
+          <Group mb="md">
+            <Text fw='bold'>{'API Host'}</Text>
+            <Code>{`${apiHost}/api/openai/v1`}</Code>
+            <CopyButton value={`${apiHost}/api/openai/v1`}>
+              {({ copied, copy }) => (
+                <Tooltip
+                  label={copied ? 'Copied' : 'Copy'}
+                  withArrow
+                  position='right'
+                >
+                  <ActionIcon
+                    color={copied ? 'blue' : 'gray'}
+                    onClick={copy}
+                    variant='light'
+                  >
+                    {copied ? (
+                      <HiOutlineCheck size='1rem' />
+                    ) : (
+                      <HiOutlineClipboardDocument size='1rem' />
+                    )}
+                  </ActionIcon>
+                </Tooltip>
+              )}
+            </CopyButton>
+          </Group>
+          <Group mb="md">
+            <Text fw='bold'>{'Models'}</Text>
+            {['accounts/fireworks/models/deepseek-r1', 'accounts/fireworks/models/deepseek-v3', 'accounts/fireworks/models/deepseek-v2p5', 'accounts/fireworks/models/qwen2p5-coder-32b-instruct', 'accounts/yi-01-ai/models/yi-large'].map((deploymentName) => (
+              <Code key={deploymentName}>{deploymentName}</Code>
+            ))}
+          </Group>
+
           <Text fw='bold'>{'API Keys'}</Text>
           <TokensTable tokens={data || {}} onDelete={handleRevokeKey} />
 
