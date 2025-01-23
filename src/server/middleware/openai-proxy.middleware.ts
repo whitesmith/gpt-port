@@ -48,6 +48,7 @@ export const proxyOpenAI = async (
 function prepareHeaders(provider: ModelProvider) {
   const headers = new Headers()
   headers.set('Content-Type', 'application/json')
+  headers.set('X-Title', 'WS-GPTPort')
 
   if (provider.type === 'openai') {
     headers.set('Authorization', `Bearer ${provider.apiKey}`)
