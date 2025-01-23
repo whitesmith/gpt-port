@@ -134,7 +134,7 @@ export default function MyTokens() {
 
           <Text color='dimmed'>
             {
-              'To access OpenRouter.ai models:'
+              'To access OpenRouter.ai models, select "OpenAI Compatible" and use the url below:'
             }
           </Text>
 
