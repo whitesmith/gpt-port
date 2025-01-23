@@ -134,7 +134,7 @@ export default function MyTokens() {
 
           <Text color='dimmed'>
             {
-              'To access Fireworks.ai models:'
+              'To access OpenRouter.ai models:'
             }
           </Text>
 
@@ -165,8 +165,18 @@ export default function MyTokens() {
           </Group>
           <Group mb="md">
             <Text fw='bold'>{'Models'}</Text>
-            {['accounts/fireworks/models/deepseek-r1', 'accounts/fireworks/models/deepseek-v3', 'accounts/fireworks/models/deepseek-v2p5', 'accounts/fireworks/models/qwen2p5-coder-32b-instruct', 'accounts/yi-01-ai/models/yi-large'].map((deploymentName) => (
-              <Code key={deploymentName}>{deploymentName}</Code>
+            {[
+              { label: 'DeepSeek R1', code: 'deepseek/deepseek-r1' },
+              { label: 'DeepSeek V3', code: 'deepseek/deepseek-chat' },
+              { label: 'MiniMax-01', code: 'minimax/minimax-01' },
+              { label: 'Qwen2.5 Coder 32B', code: 'qwen/qwen-2.5-coder-32b-instruct' },
+              { label: 'QwQ 32B', code: 'qwen/qwq-32b-preview' },
+              { label: 'Grok 2', code: 'x-ai/grok-2-1212' }
+            ].map(({ label, code }) => (
+              <Group key={code} spacing={0}>
+                <Text size="sm">{label}:&nbsp;</Text>
+                <Code>{code}</Code>
+              </Group>
             ))}
           </Group>
 
