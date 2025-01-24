@@ -166,7 +166,7 @@ export default function MyTokens() {
           <Group mb="md">
             <Text fw='bold'>{'Models'}</Text>
             {[
-              { label: 'DeepSeek R1', code: 'deepseek-ai/DeepSeek-R1' },
+              { label: 'DeepSeek R1', code: 'deepseek/deepseek-r1' },
               { label: 'DeepSeek V3', code: 'deepseek/deepseek-chat' },
               { label: 'MiniMax-01', code: 'minimax/minimax-01' },
               { label: 'Qwen2.5 Coder 32B', code: 'qwen/qwen-2.5-coder-32b-instruct' },
