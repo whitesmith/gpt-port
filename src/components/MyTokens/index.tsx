@@ -165,7 +165,7 @@ export default function MyTokens() {
           <Group mb="md">
             <Text fw='bold'>{'Models'}</Text>
             {[
-              { label: 'DeepSeek R1', code: 'deepseek-r1' },
+              { label: 'DeepSeek R1', code: 'azure-deepseek-r1' },
             ].map(({ label, code }) => (
               <Group key={code} spacing={0}>
                 <Text size="sm">{label}:&nbsp;</Text>
