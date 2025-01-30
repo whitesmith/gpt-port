@@ -137,7 +137,7 @@ export default function MyTokens() {
             }
           </Text>
 
-          <Group mb="md">
+          <Group>
             <Text fw='bold'>{'API Host'}</Text>
             <Code>{`${apiHost}/api/openai/v1`}</Code>
             <CopyButton value={`${apiHost}/api/openai/v1`}>
@@ -181,7 +181,7 @@ export default function MyTokens() {
             }
           </Text>
 
-          <Group mb="md">
+          <Group>
             <Text fw='bold'>{'API Host'}</Text>
             <Code>{`${apiHost}/api/openai/v1`}</Code>
             <CopyButton value={`${apiHost}/api/openai/v1`}>
