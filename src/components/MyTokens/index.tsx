@@ -131,6 +131,49 @@ export default function MyTokens() {
             ))}
           </Group>
 
+          <Text color='dimmed'>
+            {
+              'To use open-source models hosted on our private Azure, select "OpenAI Compatible" and use the url below:'
+            }
+          </Text>
+
+          <Group mb="md">
+            <Text fw='bold'>{'API Host'}</Text>
+            <Code>{`${apiHost}/api/openai/v1`}</Code>
+            <CopyButton value={`${apiHost}/api/openai/v1`}>
+              {({ copied, copy }) => (
+                <Tooltip
+                  label={copied ? 'Copied' : 'Copy'}
+                  withArrow
+                  position='right'
+                >
+                  <ActionIcon
+                    color={copied ? 'blue' : 'gray'}
+                    onClick={copy}
+                    variant='light'
+                  >
+                    {copied ? (
+                      <HiOutlineCheck size='1rem' />
+                    ) : (
+                      <HiOutlineClipboardDocument size='1rem' />
+                    )}
+                  </ActionIcon>
+                </Tooltip>
+              )}
+            </CopyButton>
+          </Group>
+          <Group mb="md">
+            <Text fw='bold'>{'Models'}</Text>
+            {[
+              { label: 'DeepSeek R1', code: 'deepseek-r1' },
+            ].map(({ label, code }) => (
+              <Group key={code} spacing={0}>
+                <Text size="sm">{label}:&nbsp;</Text>
+                <Code>{code}</Code>
+              </Group>
+            ))}
+          </Group>
+
 
           <Text color='dimmed'>
             {
