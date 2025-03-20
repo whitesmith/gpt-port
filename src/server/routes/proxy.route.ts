@@ -91,8 +91,8 @@ export const embeddingsValidator = z.object({
   model: z.string().optional(),
   input: z.union([
     z.string(),
-    z.array(z.string())
-  ])
+    z.array(z.string()).min(1)
+  ]).transform(val => Array.isArray(val) ? val : [val])
 }).passthrough()
 
 handler
