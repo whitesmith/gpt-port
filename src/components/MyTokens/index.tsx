@@ -126,7 +126,7 @@ export default function MyTokens() {
           </Group>
           <Group mb="md">
             <Text fw='bold'>{'Azure Deployment Name'}</Text>
-            {['o3-mini', 'o1-mini', 'o1', 'o1-preview', 'gpt-4o', 'gpt-4o-mini', 'gpt-4-turbo', 'gpt-4', 'gpt-3.5-turbo', 'text-embedding-ada-002', 'text-embedding-3-large'].map((deploymentName) => (
+            {['gpt-4.1', 'o3-mini', 'o1-mini', 'o1', 'o1-preview', 'gpt-4o', 'gpt-4o-mini', 'gpt-4-turbo', 'gpt-4', 'gpt-3.5-turbo', 'text-embedding-ada-002', 'text-embedding-3-large'].map((deploymentName) => (
               <Code key={deploymentName}>{deploymentName}</Code>
             ))}
           </Group>
