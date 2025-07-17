@@ -213,7 +213,7 @@ export default function MyTokens() {
               { label: 'MiniMax-01', code: 'minimax/minimax-01' },
               { label: 'Qwen2.5 Coder 32B', code: 'qwen/qwen-2.5-coder-32b-instruct' },
               { label: 'QwQ 32B', code: 'qwen/qwq-32b-preview' },
-              { label: 'Grok 2', code: 'x-ai/grok-2-1212' }
+              { label: 'Kimi K2', code: 'moonshotai/kimi-k2-instruct' }
             ].map(({ label, code }) => (
               <Group key={code} spacing={0}>
                 <Text size="sm">{label}:&nbsp;</Text>
