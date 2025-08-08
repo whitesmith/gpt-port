@@ -31,7 +31,7 @@ export const AzureAIModelProviderFields: FormField[] = [
     key: 'model',
     schema: z.string().min(1),
     label: 'Model',
-    defaultValue: 'gpt-4-turbo',
+    defaultValue: 'gpt-5',
   },
   {
     required: true,
