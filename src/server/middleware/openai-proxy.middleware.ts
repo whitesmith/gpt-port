@@ -19,10 +19,17 @@ export const proxyOpenAI = async (
   const req = ctx.req
   const upstreamUrl = getUpstreamURL(provider, targetPath)
   const headers = prepareHeaders(provider)
+
+  let modifiedBody = body as Record<string, any>
+  if (modifiedBody?.model === 'gpt-5-high') {
+    modifiedBody.model = 'gpt-5'
+    modifiedBody.reasoning_effort = 'high'
+  }
+
   const response = await fetch(upstreamUrl, {
     method: req.method,
     headers: headers,
-    body: req.method === 'POST' && body ? JSON.stringify(body) : undefined,
+    body: req.method === 'POST' && modifiedBody ? JSON.stringify(modifiedBody) : undefined,
   })
 
   const originalHeaders = response.headers
