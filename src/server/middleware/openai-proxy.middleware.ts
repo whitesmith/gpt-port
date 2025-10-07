@@ -20,16 +20,29 @@ export const proxyOpenAI = async (
   const upstreamUrl = getUpstreamURL(provider, targetPath)
   const headers = prepareHeaders(provider)
 
-  let modifiedBody = body as Record<string, any>
-  if (modifiedBody?.model === 'gpt-5-high') {
-    modifiedBody.model = 'gpt-5'
-    modifiedBody.reasoning_effort = 'high'
+  let requestBody: BodyInit | undefined
+
+  if (body instanceof FormData) {
+    headers.delete('Content-Type')
+    if (targetPath.includes('/realtime/')) {
+      headers.set('OpenAI-Beta', 'realtime=v1')
+    }
+    requestBody = body
+  } else {
+    let modifiedBody = body as Record<string, any>
+    if (modifiedBody?.model === 'gpt-5-high') {
+      modifiedBody.model = 'gpt-5'
+      if (targetPath !== '/v1/responses') {
+        modifiedBody.reasoning_effort = 'high'
+      }
+    }
+    requestBody = req.method === 'POST' && modifiedBody ? JSON.stringify(modifiedBody) : undefined
   }
 
   const response = await fetch(upstreamUrl, {
     method: req.method,
-    headers: headers,
-    body: req.method === 'POST' && modifiedBody ? JSON.stringify(modifiedBody) : undefined,
+    headers,
+    body: requestBody,
   })
 
   const originalHeaders = response.headers
