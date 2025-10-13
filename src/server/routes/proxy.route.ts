@@ -9,7 +9,7 @@ import { MiddlewareHandler, Context } from 'hono'
 import { Env } from '../types'
 
 export const processRequest = async (c: Context) => {
-  const result = await c.req.valid('json')
+  const result = (c.req as any).valid('json')
   let model = null;
   if ('model' in result) {
     // Get model from body
@@ -34,6 +34,33 @@ export const processRequest = async (c: Context) => {
   }
 }
 
+export const processRealtimeRequest = async (
+  c: Context,
+  extractModel: (payload: any, c: Context) => string | undefined
+) => {
+  const result = (c.req as any).valid('json')
+  const model = extractModel(result, c)
+
+  if (!model) {
+    throw new HTTPException(400, {
+      message: 'Model missing',
+    })
+  }
+
+  const modelsController = new ModelController(c.env.redis)
+  const provider = await modelsController.findProviderByModel(model)
+  if (!provider) {
+    throw new HTTPException(401, {
+      message: 'Model unsupported',
+    })
+  }
+  return {
+    result,
+    provider,
+  }
+}
+
+
 export const completions: MiddlewareHandler<Env> = async c => {
   const { result, provider } = await processRequest(c)
   return proxyOpenAI(c, result, provider, '/v1/completions')
@@ -55,30 +82,10 @@ export const responses: MiddlewareHandler<Env> = async c => {
 }
 
 export const realtimeClientSecrets: MiddlewareHandler<Env> = async c => {
-  const result = await c.req.valid('json')
-  const sessionType = (result as any).session?.type
-  const model = (result as any).session?.model
-
-  if (sessionType === 'transcription') {
-    const modelsController = new ModelController(c.env.redis)
-    const provider = await modelsController.findProviderByModel('gpt-4o-realtime-preview')
-    if (!provider) {
-      throw new HTTPException(401, { message: 'Realtime model not available' })
-    }
-    return proxyOpenAI(c, result, provider, '/v1/realtime/client_secrets')
-  }
-
-  if (!model) {
-    throw new HTTPException(400, { message: 'Model required in session' })
-  }
-
-  const modelsController = new ModelController(c.env.redis)
-  const provider = await modelsController.findProviderByModel(model)
-
-  if (!provider) {
-    throw new HTTPException(401, { message: 'Model unsupported' })
-  }
-
+  const { result, provider } = await processRealtimeRequest(
+    c,
+    payload => (payload as any).session?.model
+  )
   return proxyOpenAI(c, result, provider, '/v1/realtime/client_secrets')
 }
 
@@ -92,29 +99,27 @@ export const realtimeCalls: MiddlewareHandler<Env> = async c => {
     const sdpData = incoming.get('sdp')
 
     if (!sessionData || !sdpData) {
-      throw new HTTPException(400, { message: 'Session and SDP required' })
+      throw new HTTPException(400, { message: 'Invalid realtime payload' })
     }
 
-    const session = JSON.parse(sessionData.toString().split(';')[0])
+    const rawSession =
+      typeof sessionData === 'string'
+        ? sessionData
+        : await (sessionData as Blob).text()
+
+    const session = JSON.parse(rawSession.split(';')[0])
     model = session.model
 
-    const sdpText = sdpData instanceof File || sdpData instanceof Blob
-      ? await sdpData.text()
-      : sdpData.toString()
+    const sdpText =
+      typeof sdpData === 'string'
+        ? sdpData
+        : await (sdpData as Blob).text()
     formData.set('sdp', sdpText)
-    formData.set('session', sessionData.toString().split(';')[0])
+    formData.set('session', rawSession.split(';')[0])
   } else {
-    model = c.req.query('model')
-    if (!model) {
-      throw new HTTPException(400, { message: 'Model required in query' })
-    }
-
+    model = c.req.query('model') as string
     formData.set('sdp', await c.req.text())
     formData.set('session', JSON.stringify({ model, modalities: ['audio', 'text'] }))
-  }
-
-  if (!model) {
-    throw new HTTPException(400, { message: 'Model required' })
   }
 
   const modelsController = new ModelController(c.env.redis)
@@ -128,47 +133,30 @@ export const realtimeCalls: MiddlewareHandler<Env> = async c => {
 }
 
 export const realtimeCallAccept: MiddlewareHandler<Env> = async c => {
-  const result = await c.req.valid('json')
-  const model = (result as any).session?.model
-
-  if (!model) {
-    throw new HTTPException(400, { message: 'Model required in session' })
-  }
-
-  const modelsController = new ModelController(c.env.redis)
-  const provider = await modelsController.findProviderByModel(model)
-
-  if (!provider) {
-    throw new HTTPException(401, { message: 'Model unsupported' })
-  }
-
-  const callId = c.req.param('callId')
+  const { result, provider } = await processRealtimeRequest(
+    c,
+    payload => (payload as any).model
+  )
+  const callId = (c.req.param() as Record<string, string>).callId
   return proxyOpenAI(c, result, provider, `/v1/realtime/calls/${callId}/accept`)
 }
 
 export const realtimeCallReject: MiddlewareHandler<Env> = async c => {
-  const result = await c.req.valid('json')
-  const modelsController = new ModelController(c.env.redis)
-  const provider = await modelsController.findProviderByModel('gpt-realtime')
-
-  if (!provider) {
-    throw new HTTPException(401, { message: 'Realtime model not available' })
-  }
-
-  const callId = c.req.param('callId')
+  const { result, provider } = await processRealtimeRequest(
+    c,
+    payload => (payload as any).model
+  )
+  const callId = (c.req.param() as Record<string, string>).callId
   return proxyOpenAI(c, result, provider, `/v1/realtime/calls/${callId}/reject`)
 }
 
 export const realtimeCallHangup: MiddlewareHandler<Env> = async c => {
-  const modelsController = new ModelController(c.env.redis)
-  const provider = await modelsController.findProviderByModel('gpt-realtime')
-
-  if (!provider) {
-    throw new HTTPException(401, { message: 'Realtime model not available' })
-  }
-
-  const callId = c.req.param('callId')
-  return proxyOpenAI(c, {}, provider, `/v1/realtime/calls/${callId}/hangup`)
+  const { result, provider } = await processRealtimeRequest(
+    c,
+    payload => (payload as any).model
+  )
+  const callId = (c.req.param() as Record<string, string>).callId
+  return proxyOpenAI(c, result, provider, `/v1/realtime/calls/${callId}/hangup`)
 }
 
 export const models: MiddlewareHandler<Env> = async c => {
@@ -225,15 +213,8 @@ export const responsesValidator = z.object({
   ]).optional()
 }).passthrough()
 
-export const realtimeClientSecretsValidator = z.object({
-  session: z.object({
-    type: z.enum(['realtime', 'transcription']).optional(),
-    model: z.string().optional()
-  }).passthrough().optional()
-}).passthrough()
-
-export const realtimeCallRejectValidator = z.object({
-  status_code: z.number().optional()
+export const realtimeValidator = z.object({
+  model: z.string().optional()
 }).passthrough()
 
 handler
@@ -264,7 +245,7 @@ handler
   )
   .post(
     '/v1/realtime/client_secrets',
-    zValidator('json', realtimeClientSecretsValidator),
+    zValidator('json', realtimeValidator),
     validateAPIToken,
     realtimeClientSecrets
   )
@@ -275,18 +256,19 @@ handler
   )
   .post(
     '/v1/realtime/calls/:callId/accept',
-    zValidator('json', realtimeClientSecretsValidator),
+    zValidator('json', realtimeValidator),
     validateAPIToken,
     realtimeCallAccept
   )
   .post(
     '/v1/realtime/calls/:callId/reject',
-    zValidator('json', realtimeCallRejectValidator),
+    zValidator('json', realtimeValidator),
     validateAPIToken,
     realtimeCallReject
   )
   .post(
     '/v1/realtime/calls/:callId/hangup',
+    zValidator('json', realtimeValidator),
     validateAPIToken,
     realtimeCallHangup
   )

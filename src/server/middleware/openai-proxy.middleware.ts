@@ -24,9 +24,6 @@ export const proxyOpenAI = async (
 
   if (body instanceof FormData) {
     headers.delete('Content-Type')
-    if (targetPath.includes('/realtime/')) {
-      headers.set('OpenAI-Beta', 'realtime=v1')
-    }
     requestBody = body
   } else {
     let modifiedBody = body as Record<string, any>
