@@ -7,7 +7,7 @@ import { proxyAnthropic } from '../middleware/anthropic-proxy.middleware'
 import { chatCompletionsValidator } from './proxy.route'
 
 const anthropicChatCompletions: MiddlewareHandler<Env> = async c => {
-  const result = await c.req.valid('json')
+  const result = (c.req as any).valid('json')
   console.log("result", result)
   return proxyAnthropic(c, result, '/v1/messages')
 }
